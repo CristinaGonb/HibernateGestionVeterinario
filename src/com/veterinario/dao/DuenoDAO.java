@@ -19,19 +19,18 @@ public class DuenoDAO extends GenericDAO<Dueno> {
 		// Si esta vacio
 		if (resultadoDueno.isEmpty()) {
 			resultadoDueno = null;
-		} else {
-			// Recorro la lista
-			for (Dueno dueno : resultadoDueno) {
-				System.out.println(dueno);
-			}
 		}
+
+		session.getTransaction().commit();
+
 		return resultadoDueno;
 	}
 
-	public List<Dueno> buscarPorNombre(String nombreD) {
+	public List<Dueno> buscarPorNombre(String nombreDueno) {
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		// Realizo consulta
-		Query query = session.createQuery("SELECT d FROM Dueno d WHERE nombre=?").setString(0, nombreD);
+		Query query = session.createQuery("SELECT d FROM Dueno d WHERE d.nombre=?").setString(0, nombreDueno);
 		// Añado rdo de la consulta a la lista
 		List<Dueno> duenoABuscar = query.list();
 
@@ -40,14 +39,19 @@ public class DuenoDAO extends GenericDAO<Dueno> {
 			duenoABuscar = null;
 		}
 
+		session.getTransaction().commit();
+
 		return duenoABuscar;
 	}
 
 	public Dueno buscarPorDni(String dniD) {
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		// Realizo consulta nativa(1 resultado)
-		Dueno duenoABuscar = (Dueno) session.createSQLQuery("SELECT d FROM Dueno d WHERE dni=:dni")
-				.setString("dni", dniD).uniqueResult();
+		Dueno duenoABuscar = (Dueno) session.createQuery("SELECT d FROM Dueno d WHERE d.dni=?").setString(0, dniD)
+				.uniqueResult();
+
+		session.getTransaction().commit();
 
 		return duenoABuscar;
 	}

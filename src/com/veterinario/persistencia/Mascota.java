@@ -9,9 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ManyToAny;
 @Entity
-@Table(name="Mascota")
+@Table(name="hib_mascota")
 public class Mascota implements Serializable{
 	
 	//Propiedades

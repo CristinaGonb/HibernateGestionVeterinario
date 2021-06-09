@@ -1,26 +1,29 @@
 package com.veterinario.persistencia;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Veterinario")
-
-public class Veterinario implements Serializable{
-
-	//------Enumerado-----
-	public enum especialidad{
-		DERMATOLOGIA,PELUQUERIA,CIRUJIA,GENERAL;
-	}
-	//--------------------
+@Table(name="hib_veterinario")
+public class Veterinario implements Serializable{	
 	
 	//Propiedades
 	@Id
-	@Column(name="Dni")
+	@Column(name="dni")
 	private String dni;
 	
 	@Column(name="nombre")
@@ -29,16 +32,22 @@ public class Veterinario implements Serializable{
 	@Column(name="apellidos")
 	private String apellidos;
 	
-	@Column(name="especialidad")
-	private Veterinario.especialidad especialidad;
+	@Enumerated(EnumType.STRING)
+	@Column(name="especialidad", length = 50)
+	private Especialidad especialidad;
+	
+	//Un veterinario puede tener varias citas
+	@OneToMany(mappedBy = "veterinario", cascade= CascadeType.ALL)
+	private List<Cita> citasVeterinario;
 
 	public Veterinario () {}
 	
-	public Veterinario(String dni, String nombre, String apellidos, Veterinario.especialidad especialidad) {
+	public Veterinario(String dni, String nombre, String apellidos, String especialidad) {
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
-		this.especialidad=especialidad;
+		citasVeterinario=new ArrayList<Cita>();
+		this.especialidad=Enum.valueOf(Especialidad.class, especialidad);
 	}
 	
 
@@ -66,11 +75,11 @@ public class Veterinario implements Serializable{
 		this.apellidos = apellidos;
 	}
 
-	public Veterinario.especialidad getEspecialidad() {
+	public Especialidad getEspecialidad() {
 		return especialidad;
 	}
 
-	public void setEspecialidad(Veterinario.especialidad especialidad) {
+	public void setEspecialidad(Especialidad especialidad) {
 		this.especialidad = especialidad;
 	}
 

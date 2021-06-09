@@ -12,12 +12,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Dueno")
+@Table(name="hib_dueno")
 public class Dueno implements Serializable{
 	
 	//Propiedades
 	@Id
-	@Column(name="Dni")
+	@Column(name="dni")
 	private String dni;
 	
 	@Column(name="nombre")
@@ -32,8 +32,8 @@ public class Dueno implements Serializable{
 	@Column(name="ciudad")
 	private String ciudad;
 	
-	@OneToMany(cascade= CascadeType.ALL)
-	@JoinColumn(name ="dniDueno")
+	@OneToMany(mappedBy = "dueno", cascade= CascadeType.ALL)
+	//@JoinColumn(name = "dueno")
 	private List <Mascota> listaMascota;
 	
 	public Dueno() {}
