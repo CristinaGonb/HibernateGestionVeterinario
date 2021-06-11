@@ -7,7 +7,19 @@ import org.hibernate.Session;
 import com.veterinario.persistencia.Dueno;
 import com.veterinario.persistencia.HibernateUtil;
 
+/**
+ * Clase DuenoDAO que se utiliza para realizar consultas para la clase
+ * Dueno
+ * 
+ * @author Cristina Gonzalez Baizán
+ *
+ */
 public class DuenoDAO extends GenericDAO<Dueno> {
+	
+	/**
+	 * Metodo que recoge todos los dueños registrados en la base de datos
+	 * @return resultadoDueno
+	 */
 	public List<Dueno> listarTodosLosDuenos() {
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
@@ -26,6 +38,11 @@ public class DuenoDAO extends GenericDAO<Dueno> {
 		return resultadoDueno;
 	}
 
+	/**
+	 * Metodo que devuelve un dueño por su nombre
+	 * @param nombreDueno
+	 * @return duenoABuscar
+	 */
 	public List<Dueno> buscarPorNombre(String nombreDueno) {
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
@@ -44,11 +61,15 @@ public class DuenoDAO extends GenericDAO<Dueno> {
 		return duenoABuscar;
 	}
 
-	public Dueno buscarPorDni(String dniD) {
+	/**Metodo que busca un dueño por su dni
+	 * @param dniDueno
+	 * @return duenoABuscar
+	 */
+	public Dueno buscarPorDni(String dniDueno) {
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		// Realizo consulta nativa(1 resultado)
-		Dueno duenoABuscar = (Dueno) session.createQuery("SELECT d FROM Dueno d WHERE d.dni=?").setString(0, dniD)
+		Dueno duenoABuscar = (Dueno) session.createQuery("SELECT d FROM Dueno d WHERE d.dni=?").setString(0, dniDueno)
 				.uniqueResult();
 
 		session.getTransaction().commit();

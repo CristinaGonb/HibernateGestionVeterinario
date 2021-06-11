@@ -6,7 +6,11 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.context.internal.ThreadLocalSessionContext;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-
+/**
+ * Clase que se utiliza para gestionar la sesion de la base de datos de la aplicacion
+ * @author Cristina Gonzalez Baizan
+ *
+ */
 public class HibernateUtil {
 
     private static SessionFactory sessionFactory;

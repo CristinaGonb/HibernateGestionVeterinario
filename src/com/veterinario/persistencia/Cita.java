@@ -2,6 +2,7 @@ package com.veterinario.persistencia;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,127 +15,184 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * Clase cita recoge la información de la citas
+ * 
+ * @author Cristina González Baizán
+ *
+ */
 @Entity
 @Table(name = "hib_cita")
 public class Cita implements Serializable {
 
 	// Propiedades
+	/**
+	 * Propiedad que muestra el id único de cada cita
+	 */
 	@Id
 	@Column(name = "Id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@Column(name = "nombreCita")
-	private String nombreCita;
-	
+	/**
+	 * Propiedad que recoge la fecha de la cita
+	 */
 	@Column(name = "fecha")
 	@Temporal(TemporalType.DATE)
-	private LocalDate fecha;
+	private Date fecha;
 
-	@Column(name = "motivo")
+	/**
+	 * Propiedad que muestra el motivo de la cita de forma detallada
+	 */
+	@Column(name = "motivo" , length = 100)
 	private String motivo;
 
+	/**
+	 * Clave foránea de la tabla mascota que recoge el chip de la mascota para
+	 * añadir la cita
+	 */
 	@ManyToOne
 	@JoinColumn(name = "chip")
 	private Mascota mascota;
 
+	/**
+	 * Clave foranea de la tabla veterinario que recoge el dni del profesional que
+	 * atenderá la cita
+	 */
 	@ManyToOne
 	@JoinColumn(name = "dniVeterinario")
 	private Veterinario veterinario;
 
+	/**
+	 * Constructor vacio de Cita
+	 */
 	public Cita() {
 	}
 
-	public Cita(int id,String nombreCita, LocalDate fecha, String motivo, Mascota mascota, Veterinario veterinario) {
+	/**
+	 * Constructor de cita que recoge todas las propiedades
+	 * 
+	 * @param id          genera id
+	 * @param fecha       guarda la fecha de a cita
+	 * @param motivo      motivo detallado de la cita
+	 * @param mascota     guarda el chip de la mascota relacionada con la cita
+	 * @param veterinario guarda el dni del profesional que atiende la cita
+	 */
+	public Cita(int id, Date fecha, String motivo, Mascota mascota, Veterinario veterinario) {
 		super();
 		this.id = id;
-		this.nombreCita=nombreCita;
 		this.fecha = fecha;
 		this.motivo = motivo;
 		this.mascota = mascota;
 		this.veterinario = veterinario;
 	}
 
-	public Cita(LocalDate fecha,String nombreCita, String motivo, Mascota mascota, Veterinario veterinario) {
-		this.nombreCita=nombreCita;
+	/**
+	 * Constructor de cita que recoge las propiedades menos el id
+	 * 
+	 * @param fecha       guarda la fecha de a cita
+	 * @param motivo      motivo detallado de la cita
+	 * @param mascota     guarda el chip de la mascota relacionada con la cita
+	 * @param veterinario guarda el dni del profesional que atiende la cita
+	 */
+	public Cita(Date fecha, String motivo, Mascota mascota, Veterinario veterinario) {
 		this.fecha = fecha;
 		this.motivo = motivo;
 		this.mascota = mascota;
 		this.veterinario = veterinario;
 	}
+
+	/**
+	 * Metodo get que devuelve la informacion de una cita
+	 */
 
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public LocalDate getFecha() {
+	public Date getFecha() {
 		return fecha;
-	}
-
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
 	}
 
 	public String getMotivo() {
 		return motivo;
 	}
 
-	public void setMotivo(String motivo) {
-		this.motivo = motivo;
-	}
-
 	public Mascota getMascota() {
 		return mascota;
-	}
-
-	public void setMascota(Mascota mascota) {
-		this.mascota = mascota;
 	}
 
 	public Veterinario getVeterinario() {
 		return veterinario;
 	}
 
+	/**
+	 * Metodo set que modifca toda la informacion de la cita
+	 */
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
+	}
+
+	public void setMascota(Mascota mascota) {
+		this.mascota = mascota;
+	}
+
 	public void setVeterinario(Veterinario veterinario) {
 		this.veterinario = veterinario;
 	}
 
-	// Metodo para mostrar las citas de un veterinario
+	/**
+	 * Metodo que devuelve las citas de un veterinario
+	 * 
+	 * @return resultadoCitasVeterinario
+	 */
 	public String mostrarCitasConVeterinario() {
 		return "Citas del Veterinario " + veterinario.getNombre() + " con dni " + veterinario.getDni()
 				+ ". Cita con fecha " + fecha + " " + motivo;
 	}
 
-	// Metodo para mostrar citas de una mascota
+	/**
+	 * Metodo que devuelve las citas de una mascota
+	 * 
+	 * @return resultadoCitasMascotas
+	 */
 	public String mostrarCitasConMascotas() {
 		return "Citas de la mascota " + mascota.getNombre() + " con chip " + mascota.getChip() + ". Cita con fecha "
 				+ fecha + " motivo" + motivo;
 	}
 
-	// Metodo para mostrar citas de un dueño
+	/**
+	 * Metodo que devuelve las citas de las mascotas de un dueño
+	 * 
+	 * @return resultadoCitasMascotasDeUnDueño
+	 */
 	public String mostrarCitasDueno() {
 		return "Citas de " + mascota.getDueno().getNombre() + " con dni " + mascota.getDueno().getDni()
 				+ ".Cita con la fecha" + fecha + " para la mascota" + mascota.getNombre() + " con chip "
 				+ mascota.getChip();
 	}
 
-	// Metodo para mostrar las citas de una determinada fecha
+	/**
+	 * Metodo que devuelve la cita de una fecha determinada
+	 * 
+	 * @return resultadoCitasFecha
+	 */
 	public String mostrarFechaCita() {
 		return "Listado de citas con la fecha: " + fecha + toString();
 	}
 
-	public String getNombreCita() {
-		return nombreCita;
-	}
-
-	public void setNombreCita(String nombreCita) {
-		this.nombreCita = nombreCita;
-	}
-
+	/**
+	 * Metodo equals y hashCode
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -143,7 +201,6 @@ public class Cita implements Serializable {
 		result = prime * result + id;
 		result = prime * result + ((mascota == null) ? 0 : mascota.hashCode());
 		result = prime * result + ((motivo == null) ? 0 : motivo.hashCode());
-		result = prime * result + ((nombreCita == null) ? 0 : nombreCita.hashCode());
 		result = prime * result + ((veterinario == null) ? 0 : veterinario.hashCode());
 		return result;
 	}
@@ -174,11 +231,6 @@ public class Cita implements Serializable {
 				return false;
 		} else if (!motivo.equals(other.motivo))
 			return false;
-		if (nombreCita == null) {
-			if (other.nombreCita != null)
-				return false;
-		} else if (!nombreCita.equals(other.nombreCita))
-			return false;
 		if (veterinario == null) {
 			if (other.veterinario != null)
 				return false;
@@ -187,10 +239,13 @@ public class Cita implements Serializable {
 		return true;
 	}
 
+	/**
+	 * Metodo toString que devuelve la infromacion de la cita
+	 */
 	@Override
 	public String toString() {
-		return "Cita [id=" + id + ", nombreCita=" + nombreCita + ", fecha=" + fecha + ", motivo=" + motivo
-				+ ", mascota=" + mascota + ", veterinario=" + veterinario + "]";
+		return "Cita [id=" + id + ",  fecha=" + fecha + ", motivo=" + motivo + ", mascota=" + mascota + ", veterinario="
+				+ veterinario + "]";
 	}
 
 }
